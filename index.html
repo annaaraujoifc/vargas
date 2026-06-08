@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conexão Era Vargas: Apresentação Interativa & Gamificada</title>
+    <title>Conexão Era Vargas: Apresentação Interativa</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome para Ícones -->
@@ -35,46 +35,36 @@
             color: #991b1b;
         }
         
+        /* Animação que faltava no código original */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .animate-fadeIn {
-            animation: fadeIn 0.3s ease-out forwards;
+            animation: fadeIn 0.4s ease-out forwards;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between select-none">
+<body class="min-h-screen flex flex-col justify-between">
 
-    <!-- LOGIN OVERLAY -->
+    <!-- LOGIN OVERLAY (Ecrã de Boas-Vindas) -->
     <div id="login-screen" class="fixed inset-0 bg-[#1e232a]/95 flex items-center justify-center z-[100] p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 md:p-8 space-y-6 shadow-2xl border-t-8 border-[#cda869]">
             <div class="text-center space-y-2">
                 <span class="text-4xl animate-pulse">🎙️</span>
                 <h2 class="vintage-title text-xl md:text-2xl font-bold text-gray-800">CONEXÃO ERA VARGAS</h2>
-                <p class="text-xs text-gray-500">Introduza o seu nome para participar na apresentação de forma síncrona.</p>
+                <p class="text-xs text-gray-500">Introduza o seu nome para começar a explorar o conteúdo.</p>
             </div>
 
             <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-gray-600 uppercase mb-1">O seu Nome Completo:</label>
-                    <input type="text" id="user-name-input" class="w-full p-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-[#cda869] focus:outline-none" placeholder="Ex: Lucas Silva">
+                    <label class="block text-xs font-bold text-gray-600 uppercase mb-1">O seu Nome:</label>
+                    <input type="text" id="user-name-input" class="w-full p-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-[#cda869] focus:outline-none" placeholder="Ex: Lucas Silva" onkeypress="if(event.key === 'Enter') handleLogin()">
                 </div>
 
-                <div class="relative flex py-2 items-center">
-                    <div class="flex-grow border-t border-gray-200"></div>
-                    <span class="flex-shrink mx-4 text-gray-400 text-[10px] font-bold uppercase tracking-wider">Apenas para os Apresentadores</span>
-                    <div class="flex-grow border-t border-gray-200"></div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Chave do Apresentador (Opcional):</label>
-                    <input type="password" id="presenter-key-input" class="w-full p-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none" placeholder="Código de controlo do ecrã principal">
-                </div>
-
-                <!-- Botão de login com indicador de carregamento -->
-                <button id="login-submit-btn" disabled onclick="handleLogin()" class="w-full bg-gray-400 text-white font-bold py-3.5 rounded-xl text-sm transition-all shadow-md flex items-center justify-center gap-2 cursor-not-allowed opacity-75">
-                    <span>A ligar ao servidor...</span> <i class="fa-solid fa-spinner animate-spin"></i>
+                <!-- Botão de login -->
+                <button id="login-submit-btn" onclick="handleLogin()" class="w-full bg-[#1e232a] hover:bg-gray-800 text-white font-bold py-3.5 rounded-xl text-sm transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer">
+                    <span>Começar Jornada</span> <i class="fa-solid fa-arrow-right"></i>
                 </button>
                 <p id="login-error" class="text-xs text-red-600 text-center hidden font-semibold"></p>
             </div>
@@ -91,7 +81,7 @@
                     <span class="text-2xl text-[#cda869]">📻</span>
                     <div>
                         <h1 class="vintage-title text-base font-bold tracking-wider text-[#cda869]">ESTADO, RITMO E VERDADE</h1>
-                        <p class="text-[10px] text-gray-400" id="user-display-tag">A sincronizar ligação...</p>
+                        <p class="text-[10px] text-gray-400" id="user-display-tag">Sessão Local Ativa</p>
                     </div>
                 </div>
 
@@ -100,15 +90,8 @@
                     <button id="tab-btn-conteudo" onclick="switchTab('conteudo')" class="tab-btn px-4 py-2 rounded-lg text-xs md:text-sm font-bold bg-[#cda869] text-[#1e232a] transition-all">
                         <i class="fa-solid fa-compass mr-1"></i> Acompanhar
                     </button>
-                    <button id="tab-btn-enquete" onclick="switchTab('enquete')" class="tab-btn px-4 py-2 rounded-lg text-xs md:text-sm font-bold bg-transparent text-gray-300 hover:bg-gray-800 transition-all">
-                        <i class="fa-solid fa-square-poll-vertical mr-1"></i> Sondagem
-                    </button>
-                    <button id="tab-btn-ranking" onclick="switchTab('ranking')" class="tab-btn px-4 py-2 rounded-lg text-xs md:text-sm font-bold bg-transparent text-gray-300 hover:bg-gray-800 transition-all">
-                        <i class="fa-solid fa-trophy mr-1"></i> Classificação
-                    </button>
-                    <!-- Painel de Controlo (Visível apenas para moderadores) -->
-                    <button id="tab-btn-controle" onclick="switchTab('controle')" class="tab-btn px-4 py-2 rounded-lg text-xs md:text-sm font-bold bg-red-600 hover:bg-red-700 text-white hidden transition-all">
-                        <i class="fa-solid fa-gears mr-1"></i> Painel Geral
+                    <button id="tab-btn-curiosidades" onclick="switchTab('curiosidades')" class="tab-btn px-4 py-2 rounded-lg text-xs md:text-sm font-bold bg-transparent text-gray-300 hover:bg-gray-800 transition-all">
+                        <i class="fa-solid fa-camera-retro mr-1"></i> Curiosidades & Fotos
                     </button>
                 </nav>
             </div>
@@ -117,75 +100,79 @@
         <!-- Área de Conteúdo Principal -->
         <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-6 md:py-8">
 
-            <!-- TAB 1: ACOMPANHAR APRESENTAÇÃO -->
+            <!-- TAB 1: ACOMPANHAR APRESENTAÇÃO E QUIZ -->
             <section id="tab-conteudo" class="tab-pane block space-y-6">
                 
                 <!-- Introdução -->
-                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-2 animate-fadeIn">
-                    <h2 class="vintage-title text-base md:text-lg font-bold text-gray-800">Guia Sincronizado do Seminário</h2>
-                    <p class="text-xs text-gray-600 leading-relaxed">
-                        Selecione quem está com a palavra na frente da sala de aula para libertar o resumo estruturado e responder à pergunta interativa de cada etapa. Os seus acertos sobem instantaneamente para a classificação geral da sala!
-                    </p>
+                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between flex-wrap gap-4">
+                    <div class="space-y-2 flex-grow">
+                        <h2 class="vintage-title text-base md:text-lg font-bold text-gray-800">Guia de Estudos & Quiz</h2>
+                        <p class="text-xs text-gray-600 leading-relaxed">
+                            Navegue pelos tópicos abaixo para ler o resumo estruturado de cada etapa. Teste os seus conhecimentos respondendo à pergunta interativa no final de cada secção!
+                        </p>
+                    </div>
+                    <div class="bg-amber-50 border border-amber-200 px-4 py-2 rounded-xl text-center min-w-[120px]">
+                        <span class="block text-[10px] font-bold text-amber-600 uppercase">Seu Progresso</span>
+                        <span class="block text-xl font-bold text-gray-800" id="local-score-display">0 / 5</span>
+                    </div>
                 </div>
 
-                <!-- Seletor Ativo de Oradores -->
+                <!-- Seletor Ativo de Oradores/Tópicos -->
                 <div class="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-3">
                     <button onclick="selectSpeaker('giovana')" id="spk-btn-giovana" class="speaker-pill p-3 md:p-4 rounded-xl bg-white border border-gray-200 text-center hover:border-[#cda869] transition-all">
                         <span class="block text-[10px] font-bold text-[#cda869] uppercase">1ª Parte</span>
-                        <span class="block text-xs md:text-sm font-bold text-gray-800">Giovana</span>
+                        <span class="block text-xs md:text-sm font-bold text-gray-800">Criação do DIP</span>
                     </button>
                     <button onclick="selectSpeaker('anna')" id="spk-btn-anna" class="speaker-pill p-3 md:p-4 rounded-xl bg-white border border-gray-200 text-center hover:border-[#cda869] transition-all">
                         <span class="block text-[10px] font-bold text-[#cda869] uppercase">2ª Parte</span>
-                        <span class="block text-xs md:text-sm font-bold text-gray-800">Anna Luiza</span>
+                        <span class="block text-xs md:text-sm font-bold text-gray-800">Censura Prévia</span>
                     </button>
                     <button onclick="selectSpeaker('thayna')" id="spk-btn-thayna" class="speaker-pill p-3 md:p-4 rounded-xl bg-white border border-gray-200 text-center hover:border-[#cda869] transition-all">
                         <span class="block text-[10px] font-bold text-[#cda869] uppercase">3ª Parte</span>
-                        <span class="block text-xs md:text-sm font-bold text-gray-800">Thayná</span>
+                        <span class="block text-xs md:text-sm font-bold text-gray-800">Rádio & Cinema</span>
                     </button>
                     <button onclick="selectSpeaker('amanda')" id="spk-btn-amanda" class="speaker-pill p-3 md:p-4 rounded-xl bg-white border border-gray-200 text-center hover:border-[#cda869] transition-all">
                         <span class="block text-[10px] font-bold text-[#cda869] uppercase">4ª Parte</span>
-                        <span class="block text-xs md:text-sm font-bold text-gray-800">Amanda</span>
+                        <span class="block text-xs md:text-sm font-bold text-gray-800">O Samba</span>
                     </button>
                     <button onclick="selectSpeaker('luiza')" id="spk-btn-luiza" class="speaker-pill p-3 md:p-4 rounded-xl bg-white border border-gray-200 text-center hover:border-[#cda869] transition-all col-span-2 md:col-span-1">
                         <span class="block text-[10px] font-bold text-[#cda869] uppercase">5ª Parte</span>
-                        <span class="block text-xs md:text-sm font-bold text-gray-800">Luiza</span>
+                        <span class="block text-xs md:text-sm font-bold text-gray-800">Plano Cohen</span>
                     </button>
                 </div>
 
-                <!-- Conteúdo dos Apresentadores -->
+                <!-- Conteúdo dos Tópicos -->
                 <div id="speaker-content" class="space-y-4">
                     
-                    <!-- GIOVANA -->
+                    <!-- GIOVANA / DIP -->
                     <div id="view-giovana" class="speaker-view hidden bg-white rounded-2xl border border-gray-200 p-5 md:p-8 space-y-4 shadow-sm animate-fadeIn">
                         <div class="flex justify-between items-center border-b border-gray-100 pb-3">
                             <h3 class="font-bold text-base md:text-lg text-gray-800 flex items-center gap-2">
                                 <span class="text-xl">🏛️</span> Criação do DIP (Contexto, Finalidades e Usos)
                             </h3>
-                            <span class="text-[10px] font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full uppercase">Giovana</span>
                         </div>
                         <p class="text-xs md:text-sm text-gray-600 leading-relaxed">
                             O Departamento de Imprensa e Propaganda foi fundado em 1939 para gerir e blindar a imagem do governo Vargas. O órgão produzia cartilhas educacionais para escolas públicas, projetava desfiles cívicos monumentais e garantia que toda publicidade oficial transformasse Getúlio Vargas no líder bondoso e indestrutível da nação.
                         </p>
                         
-                        <!-- Pergunta da Giovana -->
+                        <!-- Pergunta -->
                         <div class="bg-amber-50/50 p-4 md:p-6 rounded-xl border border-amber-200 space-y-3">
-                            <span class="text-[9px] font-bold text-amber-800 uppercase tracking-widest block">Pergunta de Fixação • Vale 1 Ponto</span>
+                            <span class="text-[9px] font-bold text-amber-800 uppercase tracking-widest block">Pergunta de Fixação</span>
                             <h4 class="text-xs md:text-sm font-bold text-gray-800">Qual era a principal diretriz de atuação do DIP quanto à imagem pública de Vargas?</h4>
-                            <div class="space-y-2 text-xs flex flex-col gap-2" id="q-options-giovana"></div>
-                            <div id="explanation-giovana" class="hidden text-xs p-3.5 rounded-lg font-semibold mt-4"></div>
+                            <div class="space-y-2 text-xs" id="q-options-giovana"></div>
+                            <div id="explanation-giovana" class="hidden text-xs p-3 rounded-lg"></div>
                         </div>
                     </div>
 
-                    <!-- ANNA LUIZA -->
+                    <!-- ANNA LUIZA / CENSURA -->
                     <div id="view-anna" class="speaker-view hidden bg-white rounded-2xl border border-gray-200 p-5 md:p-8 space-y-4 shadow-sm animate-fadeIn">
                         <div class="flex justify-between items-center border-b border-gray-100 pb-3">
                             <h3 class="font-bold text-base md:text-lg text-gray-800 flex items-center gap-2">
                                 <span class="text-xl">🛑</span> O DIP como Órgão de Censura
                             </h3>
-                            <span class="text-[10px] font-bold text-red-600 bg-red-50 px-2.5 py-1 rounded-full uppercase">Anna Luiza</span>
                         </div>
                         <p class="text-xs md:text-sm text-gray-600 leading-relaxed">
-                            Censurar significa analisar de forma prévia conteúdos informativos, intelectuais e artísticos, bloqueando trechos ou proibindo circulações inteiras caso contrariem a ideologia política dominante. Sob a condução de Anna Luiza neste tópico, entenda que intelectuais, artistas de rádio e jornais independentes eram vigiados e censurados com rigor de ferro.
+                            Censurar significa analisar de forma prévia conteúdos informativos, intelectuais e artísticos, bloqueando trechos ou proibindo circulações inteiras caso contrariem a ideologia política dominante. Intelectuais, artistas de rádio e jornais independentes eram vigiados e censurados com rigor de ferro.
                         </p>
 
                         <!-- Elemento interativo: Tarjas de Censura -->
@@ -196,75 +183,72 @@
                             </p>
                         </div>
 
-                        <!-- Pergunta da Anna Luiza -->
+                        <!-- Pergunta -->
                         <div class="bg-red-50/50 p-4 md:p-6 rounded-xl border border-red-200 space-y-3">
-                            <span class="text-[9px] font-bold text-red-800 uppercase tracking-widest block">Pergunta de Fixação • Vale 1 Ponto</span>
+                            <span class="text-[9px] font-bold text-red-800 uppercase tracking-widest block">Pergunta de Fixação</span>
                             <h4 class="text-xs md:text-sm font-bold text-gray-800">Como se dava o controlo diário exercido pela censura do DIP?</h4>
-                            <div class="space-y-2 text-xs flex flex-col gap-2" id="q-options-anna"></div>
-                            <div id="explanation-anna" class="hidden text-xs p-3.5 rounded-lg font-semibold mt-4"></div>
+                            <div class="space-y-2 text-xs" id="q-options-anna"></div>
+                            <div id="explanation-anna" class="hidden text-xs p-3 rounded-lg"></div>
                         </div>
                     </div>
 
-                    <!-- THAYNÁ -->
+                    <!-- THAYNÁ / RÁDIO -->
                     <div id="view-thayna" class="speaker-view hidden bg-white rounded-2xl border border-gray-200 p-5 md:p-8 space-y-4 shadow-sm animate-fadeIn">
                         <div class="flex justify-between items-center border-b border-gray-100 pb-3">
                             <h3 class="font-bold text-base md:text-lg text-gray-800 flex items-center gap-2">
-                                <span class="text-xl">🎙️</span> Disseminação do Rádio & Cinema como Propaganda
+                                <span class="text-xl">🎙️</span> Disseminação do Rádio & Cinema
                             </h3>
-                            <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full uppercase">Thayná</span>
                         </div>
                         <p class="text-xs md:text-sm text-gray-600 leading-relaxed">
                             O rádio rompeu as distâncias geográficas brasileiras da década de 1930. O DIP institucionalizou o seu uso por meio do programa obrigatório diário "A Hora do Brasil". No cinema, os cinejornais exibidos compulsoriamente antes de todas as sessões davam corpo visual ao progresso urbano, industrial e cívico, moldando o imaginário das massas populares.
                         </p>
 
-                        <!-- Pergunta da Thayná -->
+                        <!-- Pergunta -->
                         <div class="bg-blue-50/50 p-4 md:p-6 rounded-xl border border-blue-200 space-y-3">
-                            <span class="text-[9px] font-bold text-blue-800 uppercase tracking-widest block">Pergunta de Fixação • Vale 1 Ponto</span>
+                            <span class="text-[9px] font-bold text-blue-800 uppercase tracking-widest block">Pergunta de Fixação</span>
                             <h4 class="text-xs md:text-sm font-bold text-gray-800">Por que o rádio se tornou a ferramenta de comunicação preferida do Estado Novo?</h4>
-                            <div class="space-y-2 text-xs flex flex-col gap-2" id="q-options-thayna"></div>
-                            <div id="explanation-thayna" class="hidden text-xs p-3.5 rounded-lg font-semibold mt-4"></div>
+                            <div class="space-y-2 text-xs" id="q-options-thayna"></div>
+                            <div id="explanation-thayna" class="hidden text-xs p-3 rounded-lg"></div>
                         </div>
                     </div>
 
-                    <!-- AMANDA -->
+                    <!-- AMANDA / SAMBA -->
                     <div id="view-amanda" class="speaker-view hidden bg-white rounded-2xl border border-gray-200 p-5 md:p-8 space-y-4 shadow-sm animate-fadeIn">
                         <div class="flex justify-between items-center border-b border-gray-100 pb-3">
                             <h3 class="font-bold text-base md:text-lg text-gray-800 flex items-center gap-2">
                                 <span class="text-xl">🥁</span> O Samba como Voz do Trabalhismo
                             </h3>
-                            <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full uppercase">Amanda</span>
                         </div>
                         <p class="text-xs md:text-sm text-gray-600 leading-relaxed">
                             O samba, outrora marginalizado e combatido pelas forças públicas, foi cooptado e estimulado pelo Estado Vargas como hino de identidade. Porém, as letras precisavam de ser aprovadas: o DIP exigia a exaltação da carteira de trabalho, a dignidade das indústrias e a rotina do trabalhador ordeiro, combatendo ativamente letras que faziam apologia à boemia ou ociosidade.
                         </p>
 
-                        <!-- Pergunta da Amanda -->
+                        <!-- Pergunta -->
                         <div class="bg-emerald-50/50 p-4 md:p-6 rounded-xl border border-emerald-200 space-y-3">
-                            <span class="text-[9px] font-bold text-emerald-800 uppercase tracking-widest block">Pergunta de Fixação • Vale 1 Ponto</span>
+                            <span class="text-[9px] font-bold text-emerald-800 uppercase tracking-widest block">Pergunta de Fixação</span>
                             <h4 class="text-xs md:text-sm font-bold text-gray-800">De que modo o DIP interveio na produção das letras de samba?</h4>
-                            <div class="space-y-2 text-xs flex flex-col gap-2" id="q-options-amanda"></div>
-                            <div id="explanation-amanda" class="hidden text-xs p-3.5 rounded-lg font-semibold mt-4"></div>
+                            <div class="space-y-2 text-xs" id="q-options-amanda"></div>
+                            <div id="explanation-amanda" class="hidden text-xs p-3 rounded-lg"></div>
                         </div>
                     </div>
 
-                    <!-- LUIZA -->
+                    <!-- LUIZA / PLANO COHEN -->
                     <div id="view-luiza" class="speaker-view hidden bg-white rounded-2xl border border-gray-200 p-5 md:p-8 space-y-4 shadow-sm animate-fadeIn">
                         <div class="flex justify-between items-center border-b border-gray-100 pb-3">
                             <h3 class="font-bold text-base md:text-lg text-gray-800 flex items-center gap-2">
                                 <span class="text-xl">📝</span> O Plano Cohen & As Fake News Políticas
                             </h3>
-                            <span class="text-[10px] font-bold text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full uppercase">Luiza</span>
                         </div>
                         <p class="text-xs md:text-sm text-gray-600 leading-relaxed">
-                            O <strong>Plano Cohen (1937)</strong> foi a primeira Fake News de escala institucional moderna no Brasil. Tratava-se de um falso plano comunista forjado por oficiais militares detalhando invasões, saques e depredações. O pânico provocado habilitou Vargas a suspender a Constituição e fundar a ditadura do Estado Novo. Luiza estuda como esse pânico moral do passado liga-se diretamente com as fake news disparadas em massa nos algoritmos atuais.
+                            O <strong>Plano Cohen (1937)</strong> foi a primeira Fake News de escala institucional moderna no Brasil. Tratava-se de um falso plano comunista forjado por oficiais militares detalhando invasões, saques e depredações. O pânico provocado habilitou Vargas a suspender a Constituição e fundar a ditadura do Estado Novo. 
                         </p>
 
-                        <!-- Pergunta da Luiza -->
+                        <!-- Pergunta -->
                         <div class="bg-purple-50/50 p-4 md:p-6 rounded-xl border border-purple-200 space-y-3">
-                            <span class="text-[9px] font-bold text-purple-800 uppercase tracking-widest block">Pergunta de Fixação • Vale 1 Ponto</span>
+                            <span class="text-[9px] font-bold text-purple-800 uppercase tracking-widest block">Pergunta de Fixação</span>
                             <h4 class="text-xs md:text-sm font-bold text-gray-800">Qual foi a consequência direta do falso Plano Cohen divulgado em 1937?</h4>
-                            <div class="space-y-2 text-xs flex flex-col gap-2" id="q-options-luiza"></div>
-                            <div id="explanation-luiza" class="hidden text-xs p-3.5 rounded-lg font-semibold mt-4"></div>
+                            <div class="space-y-2 text-xs" id="q-options-luiza"></div>
+                            <div id="explanation-luiza" class="hidden text-xs p-3 rounded-lg"></div>
                         </div>
                     </div>
 
@@ -272,169 +256,95 @@
 
             </section>
 
-            <!-- TAB 2: SONDAGEM EM TEMPO REAL (ENQUETE) -->
-            <section id="tab-enquete" class="tab-pane hidden space-y-6">
+            <!-- TAB 2: CURIOSIDADES E FOTOS -->
+            <section id="tab-curiosidades" class="tab-pane hidden space-y-6 animate-fadeIn">
                 
-                <div class="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm space-y-4 animate-fadeIn">
-                    <div class="space-y-1">
-                        <span class="text-[10px] font-bold text-purple-600 uppercase tracking-wider block">Estudo Democrático Conduzido por Luiza</span>
-                        <h3 class="vintage-title text-lg md:text-xl font-bold text-gray-800">Como avalia a maior ameaça das Fake News à democracia digital atual?</h3>
-                        <p class="text-xs text-gray-500 leading-relaxed">Vote na alternativa abaixo de forma anónima. Os resultados da turma serão consolidados ao vivo no painel e projetados para debates.</p>
-                    </div>
-
-                    <div class="space-y-3 text-xs md:text-sm flex flex-col" id="poll-options-container">
-                        <button onclick="window.VOTE_POLL(1)" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl hover:border-purple-400 text-left transition-all font-semibold text-gray-700 flex justify-between items-center group focus:outline-none">
-                            <span>A) O uso de robôs em redes sociais que criam pânico e manipulam votações.</span>
-                            <span class="text-gray-400 group-hover:text-purple-600 transition-all"><i class="fa-solid fa-chevron-right"></i></span>
-                        </button>
-                        <button onclick="window.VOTE_POLL(2)" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl hover:border-purple-400 text-left transition-all font-semibold text-gray-700 flex justify-between items-center group focus:outline-none">
-                            <span>B) A facilidade com que mentiras se espalham de modo descentralizado no ambiente familiar.</span>
-                            <span class="text-gray-400 group-hover:text-purple-600 transition-all"><i class="fa-solid fa-chevron-right"></i></span>
-                        </button>
-                        <button onclick="window.VOTE_POLL(3)" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl hover:border-purple-400 text-left transition-all font-semibold text-gray-700 flex justify-between items-center group focus:outline-none">
-                            <span>C) A ausência de leis eficazes para responsabilizar grandes empresas de tecnologia pelas mentiras propagadas.</span>
-                            <span class="text-gray-400 group-hover:text-purple-600 transition-all"><i class="fa-solid fa-chevron-right"></i></span>
-                        </button>
-                    </div>
-
-                    <!-- Mensagem pós voto -->
-                    <div id="poll-voted-msg" class="hidden text-center p-4 bg-emerald-50 text-emerald-800 rounded-xl border border-emerald-100 text-xs font-semibold animate-fadeIn">
-                        <i class="fa-solid fa-check-double mr-1"></i> O seu voto foi recolhido e enviado para o painel da sala!
-                    </div>
-                </div>
-
-                <!-- Painel de Resultados parciais -->
-                <div class="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm space-y-6">
-                    <h4 class="font-bold text-xs text-gray-500 uppercase tracking-widest flex items-center gap-2">
-                        <i class="fa-solid fa-chart-bar mr-1 text-[#cda869]"></i> Resultados Consolidados da Sala em Tempo Real:
-                    </h4>
-                    
-                    <div class="space-y-5">
-                        <!-- Opção A -->
-                        <div id="option-container-1" class="p-3 rounded-xl transition-all">
-                            <div class="flex justify-between items-center text-xs md:text-sm font-semibold text-gray-700 mb-1">
-                                <span class="flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full bg-purple-600"></span> Opção A
-                                    <span id="winner-badge-1" class="hidden bg-amber-100 text-amber-800 border border-amber-300 text-[9px] px-2.5 py-0.5 rounded-full font-bold animate-pulse">👑 Opção Mais Votada</span>
-                                </span>
-                                <span id="poll-count-1" class="font-mono">0 votos (0%)</span>
-                            </div>
-                            <div class="h-3 bg-gray-100 rounded-full overflow-hidden">
-                                <div id="poll-bar-1" class="bg-purple-600 h-full w-[0%] transition-all duration-500"></div>
-                            </div>
-                        </div>
-                        
-                        <!-- Opção B -->
-                        <div id="option-container-2" class="p-3 rounded-xl transition-all">
-                            <div class="flex justify-between items-center text-xs md:text-sm font-semibold text-gray-700 mb-1">
-                                <span class="flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full bg-amber-500"></span> Opção B
-                                    <span id="winner-badge-2" class="hidden bg-amber-100 text-amber-800 border border-amber-300 text-[9px] px-2.5 py-0.5 rounded-full font-bold animate-pulse">👑 Opção Mais Votada</span>
-                                </span>
-                                <span id="poll-count-2" class="font-mono">0 votos (0%)</span>
-                            </div>
-                            <div class="h-3 bg-gray-100 rounded-full overflow-hidden">
-                                <div id="poll-bar-2" class="bg-amber-500 h-full w-[0%] transition-all duration-500"></div>
-                            </div>
-                        </div>
-                        
-                        <!-- Opção C -->
-                        <div id="option-container-3" class="p-3 rounded-xl transition-all">
-                            <div class="flex justify-between items-center text-xs md:text-sm font-semibold text-gray-700 mb-1">
-                                <span class="flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full bg-blue-600"></span> Opção C
-                                    <span id="winner-badge-3" class="hidden bg-amber-100 text-amber-800 border border-amber-300 text-[9px] px-2.5 py-0.5 rounded-full font-bold animate-pulse">👑 Opção Mais Votada</span>
-                                </span>
-                                <span id="poll-count-3" class="font-mono">0 votos (0%)</span>
-                            </div>
-                            <div class="h-3 bg-gray-100 rounded-full overflow-hidden">
-                                <div id="poll-bar-3" class="bg-blue-600 h-full w-[0%] transition-all duration-500"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </section>
-
-            <!-- TAB 3: CLASSIFICAÇÃO EM TEMPO REAL (RANKING) -->
-            <section id="tab-ranking" class="tab-pane hidden space-y-6">
-                
-                <div class="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm space-y-4 text-center animate-fadeIn">
-                    <div class="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner">
-                        🏆
-                    </div>
-                    <div class="space-y-1">
-                        <h3 class="vintage-title text-lg md:text-xl font-bold text-gray-800">Classificação da Sala de Aula</h3>
-                        <p class="text-xs text-gray-500">Histórico de respostas completas, visível em tempo real para todos na sala.</p>
-                    </div>
-
-                    <!-- Legendas do Ranking -->
-                    <div class="flex flex-wrap justify-center gap-3 text-[10px] text-gray-500 mt-4 font-semibold bg-gray-50 p-3 rounded-xl border border-gray-100 inline-flex mx-auto">
-                        <span class="flex items-center gap-1.5"><span class="w-4 h-4 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center"><i class="fa-solid fa-check text-[9px]"></i></span> Respondeu e Acertou</span>
-                        <span class="flex items-center gap-1.5"><span class="w-4 h-4 rounded-full bg-red-100 text-red-600 flex items-center justify-center"><i class="fa-solid fa-xmark text-[9px]"></i></span> Respondeu e Errou</span>
-                        <span class="flex items-center gap-1.5"><span class="w-4 h-4 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center"><i class="fa-solid fa-minus text-[9px]"></i></span> Não Respondeu</span>
-                    </div>
-
-                    <!-- Tabela de Alunos e Acertos -->
-                    <div class="overflow-x-auto border border-gray-100 rounded-xl mt-4">
-                        <table class="w-full text-left border-collapse text-xs md:text-sm">
-                            <thead>
-                                <tr class="bg-gray-50 text-gray-500 uppercase tracking-wider border-b border-gray-100 text-[10px] md:text-xs">
-                                    <th class="py-3.5 px-3 md:px-4 font-bold text-center w-12 md:w-16">#</th>
-                                    <th class="py-3.5 px-3 md:px-4 font-bold">Aluno(a) / Utilizador(a)</th>
-                                    <th class="py-3.5 px-3 md:px-4 font-bold text-center w-32 md:w-56">Histórico (Partes 1 a 5)</th>
-                                    <th class="py-3.5 px-3 md:px-4 font-bold text-center w-16 md:w-24">Pontos</th>
-                                </tr>
-                            </thead>
-                            <tbody id="ranking-list" class="divide-y divide-gray-100 text-gray-700 font-medium font-sans">
-                                <tr>
-                                    <td colspan="4" class="py-8 text-center text-gray-400">Nenhum utilizador ligado no momento.</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-            </section>
-
-            <!-- TAB 4: PAINEL DE CONTROLO DE APRESENTAÇÃO (Acesso Administrativo Restrito) -->
-            <section id="tab-controle" class="tab-pane hidden space-y-6">
-                
-                <div class="bg-white p-6 rounded-2xl border-2 border-red-200 shadow-sm space-y-4 animate-fadeIn">
-                    <div class="flex justify-between items-center">
-                        <h3 class="vintage-title text-base font-bold text-red-700"><i class="fa-solid fa-gears"></i> Controlo do Seminário</h3>
-                        <span class="bg-red-100 text-red-800 text-[9px] font-bold px-2 py-0.5 rounded uppercase">Moderador</span>
-                    </div>
-                    
+                <div class="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm space-y-2">
+                    <h2 class="vintage-title text-base md:text-lg font-bold text-gray-800">Galeria Histórica: O Rosto do Estado Novo</h2>
                     <p class="text-xs text-gray-600 leading-relaxed">
-                        Como apresentadores do seminário (Giovana, Anna Luiza, Thayná, Amanda, Luiza), utilizem este espaço para gerir e reiniciar os dados da turma para novas apresentações.
+                        Explore fatos marcantes sobre como o Estado brasileiro desenhou meticulosamente a imagem do progresso e da liderança durante a ditadura de Vargas.
                     </p>
-
-                    <div class="flex flex-wrap gap-2">
-                        <button onclick="window.RESET_ALL_SCORES()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer">
-                            <i class="fa-solid fa-trash-can"></i> Reiniciar Pontuações & Históricos
-                        </button>
-                        <button onclick="window.RESET_POLL_VOTES()" class="bg-gray-800 hover:bg-gray-900 text-white text-xs font-bold px-4 py-2.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer">
-                            <i class="fa-solid fa-square-minus"></i> Reiniciar Votos da Sondagem
-                        </button>
-                    </div>
                 </div>
 
+                <!-- Grid de Curiosidades -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Card 1 -->
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col group">
+                        
+                        <!-- Imagem do Culto ao Líder -->
+                        <div class="aspect-video bg-gray-100 overflow-hidden relative">
+                            <img src="images/cultoaolider.jpg" alt="Getúlio Vargas e o Culto ao Líder" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.onerror=null; this.src='https://placehold.co/600x400/e2e8f0/64748b?text=Culto+ao+Líder';">
+                        </div>
+
+                        <div class="p-5 flex-grow space-y-2">
+                            <span class="text-[10px] font-bold text-amber-600 uppercase tracking-wider">O Culto ao Líder</span>
+                            <h4 class="font-bold text-gray-800 text-sm md:text-base">O "Pai dos Pobres"</h4>
+                            <p class="text-xs text-gray-600 leading-relaxed">O DIP distribuía anualmente milhares de fotografias oficiais de Getúlio Vargas. O decreto exigia que o seu retrato estivesse pendurado de forma visível em todas as salas de aula, edifícios governamentais e até em estabelecimentos comerciais.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col group">
+                        
+                        <!-- Imagem de A Hora do Brasil -->
+                        <div class="aspect-video bg-gray-100 overflow-hidden relative">
+                            <img src="images/ahoradobrasil.jpg" alt="Transmissão do programa A Hora do Brasil" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.onerror=null; this.src='https://placehold.co/600x400/e2e8f0/64748b?text=A+Hora+do+Brasil';">
+                        </div>
+
+                        <div class="p-5 flex-grow space-y-2">
+                            <span class="text-[10px] font-bold text-blue-600 uppercase tracking-wider">Comunicação de Massas</span>
+                            <h4 class="font-bold text-gray-800 text-sm md:text-base">A Hora do Brasil</h4>
+                            <p class="text-xs text-gray-600 leading-relaxed">Criado originalmente em 1935, tornou-se de transmissão obrigatória a partir de 1938. Todos os dias, às 19h00, o país "parava" para escutar as realizações do governo, discursos de Vargas e música rigorosamente selecionada pelo DIP.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col group">
+                        
+                        <!-- Imagem da Juventude Varguista -->
+                        <div class="aspect-video bg-gray-100 overflow-hidden relative">
+                            <img src="images/juventude.jpg" alt="Desfile cívico da Juventude Varguista" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.onerror=null; this.src='https://placehold.co/600x400/e2e8f0/64748b?text=Juventude+Varguista';">
+                        </div>
+
+                        <div class="p-5 flex-grow space-y-2">
+                            <span class="text-[10px] font-bold text-red-600 uppercase tracking-wider">Educação Ideológica</span>
+                            <h4 class="font-bold text-gray-800 text-sm md:text-base">A Juventude Varguista</h4>
+                            <p class="text-xs text-gray-600 leading-relaxed">As crianças aprendiam a ler com cartilhas financiadas pelo Estado que comparavam Getúlio a um pai bondoso e protetor. Desfiles cívicos monumentais, como no Dia da Juventude, mobilizavam milhares de alunos em estádios.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col group">
+                        
+                        <!-- Imagem do Samba Exaltação -->
+                        <div class="aspect-video bg-gray-100 overflow-hidden relative">
+                            <img src="images/samba.gif" alt="Samba Exaltação e Identidade Nacional" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.onerror=null; this.src='https://placehold.co/600x400/e2e8f0/64748b?text=Samba+Exaltação';">
+                        </div>
+
+                        <div class="p-5 flex-grow space-y-2">
+                            <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Identidade Nacional</span>
+                            <h4 class="font-bold text-gray-800 text-sm md:text-base">O Samba Exaltação</h4>
+                            <p class="text-xs text-gray-600 leading-relaxed">Antes visto com preconceito pelas elites, o samba foi transformado em produto de exportação nacional. "Aquarela do Brasil", de Ary Barroso (1939), é o maior exemplo desse movimento de ufanismo e exaltação das belezas brasileiras estimulado pelo regime.</p>
+                        </div>
+                    </div>
+
+                </div>
             </section>
 
         </main>
 
         <!-- Rodapé -->
         <footer class="bg-[#1e232a] text-gray-500 py-4 text-center border-t border-[#cda869]/20 text-[10px]">
-            <p>Trabalho Prático de História • Mídias e Controlo de Narrativas</p>
+            <p>Conexão Era Vargas • Estudo Interativo de História (Versão Local)</p>
         </footer>
 
     </div>
 
-    <!-- Script de Inicialização de Interface e Tratamentos Gerais -->
+    <!-- Script de Funcionalidades Locais -->
     <script>
-        let isPresenter = false;
         let localAnswers = { giovana: null, anna: null, thayna: null, amanda: null, luiza: null };
+        let currentScore = 0;
 
         const correctAnswers = {
             giovana: 1,
@@ -444,15 +354,12 @@
             luiza: 1
         };
 
-        const speakersOrder = ['giovana', 'anna', 'thayna', 'amanda', 'luiza'];
-        const optionLetterMap = ['A', 'B', 'C'];
-
         const explanationTexts = {
-            giovana: "O papel principal do DIP era construir uma imagem idealizada e cívica de Vargas como o benfeitor das classes vulneráveis.",
-            anna: "A censura prévia bloqueava qualquer peça de teatro, partitura musical ou manchete antes de serem expostas à sociedade.",
-            thayna: "Num país com grande extensão territorial e analfabetismo expressivo, o rádio rompeu as barreiras físicas e intelectuais.",
-            amanda: "O DIP atuou diretamente forçando sambistas a remodelarem letras boémias em benefício de discursos sobre trabalho honrado.",
-            luiza: "O Plano Cohen mobilizou o temor popular de uma revolução civil comunista, facilitando juridicamente a eclosão do Estado Novo."
+            giovana: "Correto! O papel principal do DIP era construir uma imagem idealizada e cívica de Vargas como o benfeitor das classes vulneráveis.",
+            anna: "Correto! A censura prévia bloqueava qualquer peça de teatro, partitura musical ou manchete antes de serem expostas à sociedade.",
+            thayna: "Correto! Num país com grande extensão territorial e analfabetismo expressivo, o rádio rompeu as barreiras físicas e intelectuais.",
+            amanda: "Correto! O DIP atuou diretamente forçando sambistas a remodelarem letras boémias em benefício de discursos sobre trabalho honrado.",
+            luiza: "Correto! O Plano Cohen mobilizou o temor popular de uma revolução civil comunista, facilitando juridicamente a eclosão do Estado Novo."
         };
 
         const questionsData = {
@@ -499,84 +406,21 @@
             });
         }
 
-        // Função do botão "Entrar" (Login Síncrono)
-        async function handleLogin() {
+        // Função do botão "Entrar"
+        function handleLogin() {
             const errEl = document.getElementById('login-error');
             const name = document.getElementById('user-name-input').value.trim();
-            const presKey = document.getElementById('presenter-key-input').value.trim();
-            const loginBtn = document.getElementById('login-submit-btn');
 
             if (!name) {
-                errEl.textContent = "Por favor, introduza o seu nome completo.";
+                errEl.textContent = "Por favor, introduza o seu nome.";
                 errEl.classList.remove('hidden');
                 return;
             }
 
             errEl.classList.add('hidden');
 
-            // Feedback visual de carregamento no botão
-            const originalHTML = loginBtn.innerHTML;
-            loginBtn.disabled = true;
-            loginBtn.innerHTML = `<span>A verificar sessão...</span> <i class="fa-solid fa-spinner animate-spin"></i>`;
-
-            // Esperar até que a variável global window.CURRENT_FB_USER esteja preenchida (Máximo 6 segundos)
-            let checkCount = 0;
-            while (!window.CURRENT_FB_USER && checkCount < 30) {
-                await new Promise(resolve => setTimeout(resolve, 200));
-                checkCount++;
-            }
-
-            // Restaurar botão de login
-            loginBtn.disabled = false;
-            loginBtn.innerHTML = originalHTML;
-
-            if (presKey === 'vargas1930') {
-                isPresenter = true;
-                const ctrlBtn = document.getElementById('tab-btn-controle');
-                if (ctrlBtn) ctrlBtn.classList.remove('hidden');
-            }
-
-            // Gravar ou recuperar perfil no Firestore após autenticação segura confirmada
-            try {
-                if (window.CURRENT_FB_USER && window.FB_FUNCTIONS && window.FB_DB) {
-                    const { doc, setDoc, getDoc } = window.FB_FUNCTIONS;
-                    const userDocRef = doc(window.FB_DB, 'artifacts', window.FB_APP_ID, 'public', 'data', 'users', window.CURRENT_FB_USER.uid);
-                    
-                    // Verificar se o utilizador já possui histórico guardado de modo a não sobrepor a zeros
-                    const checkSnap = await getDoc(userDocRef);
-                    let initialScore = 0;
-                    let initialAnswers = {};
-
-                    if (checkSnap.exists()) {
-                        const data = checkSnap.data();
-                        initialScore = data.score !== undefined ? data.score : 0;
-                        initialAnswers = data.answers || {};
-                        
-                        // Atualizar localAnswers e aplicar à UI
-                        localAnswers = { ...localAnswers, ...initialAnswers };
-                    }
-                    
-                    await setDoc(userDocRef, {
-                        name: name,
-                        isPresenter: isPresenter,
-                        score: initialScore,
-                        answers: initialAnswers,
-                        uid: window.CURRENT_FB_USER.uid
-                    }, { merge: true });
-
-                    document.getElementById('user-display-tag').textContent = `${isPresenter ? 'Apresentador(a)' : 'Utilizador(a)'}: ${name}`;
-                    
-                    // Forçar atualização dos botões de respostas
-                    Object.keys(localAnswers).forEach(spk => {
-                        updateQuestionButtonsUI(spk);
-                    });
-                } else {
-                    document.getElementById('user-display-tag').textContent = `${isPresenter ? 'Apresentador(a)' : 'Utilizador(a)'}: ${name} (Convidado)`;
-                }
-            } catch (err) {
-                console.error("Erro ao sincronizar login com o servidor:", err);
-                document.getElementById('user-display-tag').textContent = `${isPresenter ? 'Apresentador(a)' : 'Utilizador(a)'}: ${name} (Offline)`;
-            }
+            // Atualiza tag do utilizador local
+            document.getElementById('user-display-tag').textContent = `Aluno(a): ${name}`;
 
             // Transição visual de ecrãs
             document.getElementById('login-screen').classList.add('hidden');
@@ -584,7 +428,7 @@
             selectSpeaker('giovana');
         }
 
-        // Alternar visualização por orador
+        // Alternar visualização por tópico/orador
         function selectSpeaker(speakerId) {
             document.querySelectorAll('.speaker-view').forEach(view => view.classList.add('hidden'));
             document.querySelectorAll('.speaker-pill').forEach(btn => {
@@ -598,68 +442,28 @@
             }
         }
 
-        // Responder à pergunta da etapa ativa
-        async function answerQuestion(speaker, selectedOptionIndex) {
-            if (localAnswers[speaker] !== null && localAnswers[speaker] !== undefined) return; // Bloquear nova resposta
+        // Responder à pergunta e calcular score local
+        function answerQuestion(speaker, selectedOptionIndex) {
+            if (localAnswers[speaker] !== null) return; // Bloquear nova resposta
 
             localAnswers[speaker] = selectedOptionIndex;
             const isCorrect = (selectedOptionIndex === correctAnswers[speaker]);
 
-            // Atualizar UI Localmente antes de subir
-            updateQuestionButtonsUI(speaker);
-
-            // Sincronizar o acerto no Firestore em tempo real para o Ranking Público
-            try {
-                if (window.CURRENT_FB_USER && window.FB_FUNCTIONS && window.FB_DB) {
-                    const { doc, getDoc, updateDoc } = window.FB_FUNCTIONS;
-                    const userDocRef = doc(window.FB_DB, 'artifacts', window.FB_APP_ID, 'public', 'data', 'users', window.CURRENT_FB_USER.uid);
-                    
-                    const userSnap = await getDoc(userDocRef);
-                    if (userSnap.exists()) {
-                        const userData = userSnap.data();
-                        const currentScore = userData.score || 0;
-                        const serverAnswers = userData.answers || {};
-
-                        serverAnswers[speaker] = selectedOptionIndex;
-                        const newScore = isCorrect ? currentScore + 1 : currentScore;
-
-                        await updateDoc(userDocRef, { 
-                            score: newScore,
-                            answers: serverAnswers
-                        });
-                    }
-                }
-            } catch (e) {
-                console.error("Erro ao sincronizar resposta na nuvem:", e);
-            }
-        }
-
-        // Forçar renderização de botões de acordo com respostas existentes
-        function updateQuestionButtonsUI(speaker) {
             const container = document.getElementById(`q-options-${speaker}`);
-            if (!container) return;
             const buttons = container.getElementsByTagName('button');
             const explanationEl = document.getElementById(`explanation-${speaker}`);
-            const selectedOptionIndex = localAnswers[speaker];
 
-            if (selectedOptionIndex === null || selectedOptionIndex === undefined) {
-                explanationEl.classList.add('hidden');
-                for (let i = 0; i < buttons.length; i++) {
-                    buttons[i].disabled = false;
-                    buttons[i].className = "w-full text-left p-3.5 bg-white border border-gray-200 rounded-lg hover:border-[#cda869] transition-all focus:outline-none";
-                }
-                return;
-            }
-
-            const isCorrect = (selectedOptionIndex === correctAnswers[speaker]);
             explanationEl.classList.remove('hidden');
-            
             if (isCorrect) {
-                explanationEl.className = "text-xs p-3.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold mt-4 animate-fadeIn";
-                explanationEl.innerHTML = `<i class="fa-solid fa-check-circle mr-1"></i> <strong>Correto!</strong> ${explanationTexts[speaker]}`;
+                explanationEl.className = "text-xs p-3.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold";
+                explanationEl.textContent = `✓ ${explanationTexts[speaker]}`;
+                
+                // Incrementa score local e atualiza display
+                currentScore++;
+                document.getElementById('local-score-display').textContent = `${currentScore} / 5`;
             } else {
-                explanationEl.className = "text-xs p-3.5 rounded-lg bg-red-50 text-red-800 border border-red-200 font-semibold mt-4 animate-fadeIn";
-                explanationEl.innerHTML = `<i class="fa-solid fa-xmark-circle mr-1"></i> <strong>Incorreto.</strong> ${explanationTexts[speaker]}`;
+                explanationEl.className = "text-xs p-3.5 rounded-lg bg-red-50 text-red-800 border border-red-200 font-semibold";
+                explanationEl.textContent = `✗ Resposta Incorreta. ${explanationTexts[speaker]}`;
             }
 
             // Aplicar alteração visual nos botões
@@ -668,14 +472,14 @@
                 if (i === correctAnswers[speaker]) {
                     buttons[i].className = "w-full text-left p-3.5 bg-emerald-50 border-2 border-emerald-500 rounded-lg text-emerald-950 font-bold transition-all";
                 } else if (i === selectedOptionIndex) {
-                    buttons[i].className = "w-full text-left p-3.5 bg-red-50 border-2 border-red-500 rounded-lg text-red-950 font-bold transition-all opacity-90";
+                    buttons[i].className = "w-full text-left p-3.5 bg-red-50 border-2 border-red-500 rounded-lg text-red-950 font-bold transition-all";
                 } else {
-                    buttons[i].className = "w-full text-left p-3.5 bg-gray-50 border border-gray-100 rounded-lg text-gray-400 transition-all opacity-50";
+                    buttons[i].className = "w-full text-left p-3.5 bg-gray-50 border border-gray-100 rounded-lg text-gray-400 transition-all cursor-not-allowed";
                 }
             }
         }
 
-        // Alternar de abas
+        // Alternar entre abas Principais (Acompanhar vs Curiosidades)
         function switchTab(tabId) {
             document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden'));
             document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -689,388 +493,10 @@
             }
         }
 
-        // Modais e Toasts Utilitários (Alternativa segura contra alert/confirm)
-        function showNotification(title, message, type = 'info') {
-            const container = document.getElementById('notification-toast') || createNotificationContainer();
-            container.innerHTML = `
-                <div class="bg-white border-l-4 ${type === 'success' ? 'border-emerald-500' : type === 'error' ? 'border-red-500' : 'border-[#cda869]'} p-4 rounded-r-xl shadow-2xl flex items-start gap-3 max-w-sm w-full animate-fadeIn border-t border-b border-r border-gray-100">
-                    <span class="text-lg">${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</span>
-                    <div class="flex-grow space-y-1">
-                        <h4 class="font-bold text-xs text-gray-800 uppercase tracking-wider">${title}</h4>
-                        <p class="text-[11px] text-gray-600">${message}</p>
-                    </div>
-                </div>
-            `;
-            container.classList.remove('hidden');
-            setTimeout(() => {
-                container.classList.add('hidden');
-            }, 4000);
-        }
-
-        function createNotificationContainer() {
-            const div = document.createElement('div');
-            div.id = 'notification-toast';
-            div.className = "fixed bottom-4 right-4 z-[200] max-w-sm w-full pointer-events-auto hidden";
-            document.body.appendChild(div);
-            return div;
-        }
-
-        function showCustomConfirm(title, message, onConfirm) {
-            const overlay = document.createElement('div');
-            overlay.className = "fixed inset-0 bg-black/60 flex items-center justify-center z-[200] p-4";
-            overlay.innerHTML = `
-                <div class="bg-white rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl border-t-8 border-red-500 animate-fadeIn">
-                    <div class="text-center space-y-2">
-                        <span class="text-3xl">⚠️</span>
-                        <h3 class="vintage-title text-sm md:text-base font-bold text-gray-800 uppercase tracking-wider">${title}</h3>
-                        <p class="text-xs text-gray-600 leading-relaxed">${message}</p>
-                    </div>
-                    <div class="flex gap-2 justify-center pt-2">
-                        <button id="modal-cancel-btn" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-xl text-xs font-bold transition-all focus:outline-none">
-                            Cancelar
-                        </button>
-                        <button id="modal-confirm-btn" class="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition-all shadow-md focus:outline-none">
-                            Confirmar
-                        </button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(overlay);
-
-            overlay.querySelector('#modal-cancel-btn').onclick = () => { overlay.remove(); };
-            overlay.querySelector('#modal-confirm-btn').onclick = async () => {
-                overlay.remove();
-                await onConfirm();
-            };
-        }
-
+        // Inicializa o conteúdo assim que o documento carregar
         document.addEventListener('DOMContentLoaded', () => {
             renderQuestions();
         });
-    </script>
-
-    <!-- Módulos do Firebase SDK integrados -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, updateDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // Configuração Inicial do Firebase
-        const firebaseConfig = JSON.parse(__firebase_config);
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'seminario-era-vargas-v1';
-
-        // Escopo Global para as Funções do Firebase
-        window.FB_AUTH = auth;
-        window.FB_DB = db;
-        window.FB_APP_ID = appId;
-        window.FB_FUNCTIONS = { setDoc, getDoc, doc, collection, onSnapshot, updateDoc, getDocs };
-
-        // Autenticar Anonimamente de acordo com as diretrizes
-        const initAuthentication = async () => {
-            try {
-                let userCredential;
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    userCredential = await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    userCredential = await signInAnonymously(auth);
-                }
-                
-                const user = userCredential.user;
-                window.CURRENT_FB_USER = user;
-
-                // Ativar o botão de login após autenticação inicial concluída
-                const loginBtn = document.getElementById('login-submit-btn');
-                if (loginBtn) {
-                    loginBtn.disabled = false;
-                    loginBtn.className = "w-full bg-[#1e232a] hover:bg-gray-800 text-white font-bold py-3.5 rounded-xl text-sm transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer opacity-100";
-                    loginBtn.innerHTML = `<span>Entrar no Sistema</span> <i class="fa-solid fa-right-to-bracket"></i>`;
-                }
-
-                // Iniciar escuta síncrona
-                startRealtimeListeners(user);
-            } catch (err) {
-                console.error("Erro ao autenticar com o Firebase:", err);
-            }
-        };
-
-        // Listeners em tempo real (Regras 1 e 2)
-        function startRealtimeListeners(user) {
-            if (!user) return;
-
-            // 1. Ouvinte da Sondagem em tempo real
-            const pollDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'poll_results', 'global');
-            onSnapshot(pollDocRef, (snap) => {
-                if (snap.exists()) {
-                    const data = snap.data();
-                    const opt1 = data.opt1 || 0;
-                    const opt2 = data.opt2 || 0;
-                    const opt3 = data.opt3 || 0;
-                    const totalVotes = opt1 + opt2 + opt3;
-                    window.UPDATE_POLL_UI(opt1, opt2, opt3, totalVotes);
-                } else {
-                    window.UPDATE_POLL_UI(0, 0, 0, 0);
-                }
-            }, (err) => {
-                console.error("Erro na escuta da sondagem em tempo real:", err);
-            });
-
-            // 2. Ouvinte de dados do próprio documento (Necessário para escutar resets do apresentador)
-            const userDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'users', user.uid);
-            onSnapshot(userDocRef, (snap) => {
-                if (snap.exists()) {
-                    const userData = snap.data();
-                    const serverAnswers = userData.answers || {};
-                    let uiChanged = false;
-
-                    Object.keys(localAnswers).forEach(key => {
-                        const targetVal = serverAnswers[key] !== undefined ? serverAnswers[key] : null;
-                        if (localAnswers[key] !== targetVal) {
-                            localAnswers[key] = targetVal;
-                            uiChanged = true;
-                        }
-                    });
-
-                    if (uiChanged) {
-                        Object.keys(localAnswers).forEach(spk => {
-                            updateQuestionButtonsUI(spk);
-                        });
-                    }
-                }
-            }, (err) => {
-                console.error("Erro na escuta do utilizador em tempo real:", err);
-            });
-
-            // 3. Ouvinte da Classificação (Ranking) público para todos os participantes com histórico detalhado
-            const usersCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'users');
-            onSnapshot(usersCollectionRef, (querySnap) => {
-                const userList = [];
-                querySnap.forEach((doc) => {
-                    const userData = doc.data();
-                    if (!userData.isPresenter) {
-                        userList.push({
-                            name: userData.name || "Sem Nome",
-                            score: userData.score || 0,
-                            answers: userData.answers || {}
-                        });
-                    }
-                });
-
-                // Ordenação em memória para evitar a necessidade de criar índices compostos no Firestore
-                userList.sort((a, b) => {
-                    if (b.score !== a.score) return b.score - a.score;
-                    return a.name.localeCompare(b.name);
-                });
-                window.UPDATE_RANKING_UI(userList);
-            }, (err) => {
-                console.error("Erro na escuta da classificação em tempo real:", err);
-            });
-        }
-
-        // Submeter voto na sondagem
-        window.VOTE_POLL = async function(optionNum) {
-            document.getElementById('poll-options-container').classList.add('hidden');
-            document.getElementById('poll-voted-msg').classList.remove('hidden');
-
-            try {
-                if (window.CURRENT_FB_USER) {
-                    const pollDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'poll_results', 'global');
-                    const snap = await getDoc(pollDocRef);
-                    let opt1 = 0, opt2 = 0, opt3 = 0;
-
-                    if (snap.exists()) {
-                        const d = snap.data();
-                        opt1 = d.opt1 || 0;
-                        opt2 = d.opt2 || 0;
-                        opt3 = d.opt3 || 0;
-                    }
-
-                    if (optionNum === 1) opt1++;
-                    if (optionNum === 2) opt2++;
-                    if (optionNum === 3) opt3++;
-
-                    await setDoc(pollDocRef, { opt1, opt2, opt3 }, { merge: true });
-                    showNotification("Sondagem enviada", "O seu voto foi partilhado com sucesso com a sala!", "success");
-                }
-            } catch (err) {
-                console.error("Erro ao registar voto da sondagem no servidor:", err);
-            }
-        }
-
-        // Inicializar aplicação
-        initAuthentication();
-    </script>
-
-    <!-- Funções Auxiliares de Interface -->
-    <script>
-        // Atualização da UI da Sondagem
-        window.UPDATE_POLL_UI = function(o1, o2, o3, total) {
-            const pct1 = total > 0 ? Math.round((o1 / total) * 100) : 0;
-            const pct2 = total > 0 ? Math.round((o2 / total) * 100) : 0;
-            const pct3 = total > 0 ? Math.round((o3 / total) * 100) : 0;
-
-            document.getElementById('poll-count-1').textContent = `${o1} votos (${pct1}%)`;
-            document.getElementById('poll-count-2').textContent = `${o2} votos (${pct2}%)`;
-            document.getElementById('poll-count-3').textContent = `${o3} votos (${pct3}%)`;
-
-            document.getElementById('poll-bar-1').style.width = `${pct1}%`;
-            document.getElementById('poll-bar-2').style.width = `${pct2}%`;
-            document.getElementById('poll-bar-3').style.width = `${pct3}%`;
-
-            const maxVal = Math.max(o1, o2, o3);
-            
-            document.getElementById('winner-badge-1').classList.add('hidden');
-            document.getElementById('winner-badge-2').classList.add('hidden');
-            document.getElementById('winner-badge-3').classList.add('hidden');
-            
-            document.getElementById('option-container-1').className = "p-3 rounded-xl transition-all";
-            document.getElementById('option-container-2').className = "p-3 rounded-xl transition-all";
-            document.getElementById('option-container-3').className = "p-3 rounded-xl transition-all";
-
-            if (maxVal > 0) {
-                if (o1 === maxVal) {
-                    document.getElementById('winner-badge-1').classList.remove('hidden');
-                    document.getElementById('option-container-1').className = "p-4 rounded-xl bg-purple-50 border border-purple-100 transition-all shadow-sm";
-                }
-                if (o2 === maxVal) {
-                    document.getElementById('winner-badge-2').classList.remove('hidden');
-                    document.getElementById('option-container-2').className = "p-4 rounded-xl bg-amber-50 border border-amber-100 transition-all shadow-sm";
-                }
-                if (o3 === maxVal) {
-                    document.getElementById('winner-badge-3').classList.remove('hidden');
-                    document.getElementById('option-container-3').className = "p-4 rounded-xl bg-blue-50 border border-blue-100 transition-all shadow-sm";
-                }
-            }
-        }
-
-        // Atualização da Classificação Dinâmica (Detalhado com Histórico de respostas em tempo real)
-        window.UPDATE_RANKING_UI = function(list) {
-            const listContainer = document.getElementById('ranking-list');
-            listContainer.innerHTML = '';
-
-            if (list.length === 0) {
-                listContainer.innerHTML = `
-                    <tr>
-                        <td colspan="4" class="py-8 text-center text-gray-400">Nenhum utilizador ligado no momento.</td>
-                    </tr>
-                `;
-                return;
-            }
-
-            list.forEach((user, index) => {
-                let badge = `${index + 1}º`;
-                let badgeStyle = "text-[#cda869] font-bold";
-                if (index === 0) { badge = '🥇'; badgeStyle = "text-xl"; }
-                if (index === 1) { badge = '🥈'; badgeStyle = "text-xl"; }
-                if (index === 2) { badge = '🥉'; badgeStyle = "text-xl"; }
-
-                // Construção dinâmica do histórico (Partes 1 a 5)
-                let historyHtml = '<div class="flex gap-1.5 md:gap-2 justify-center items-center">';
-                
-                speakersOrder.forEach((spk, idx) => {
-                    const ansIndex = user.answers ? user.answers[spk] : undefined;
-                    const spkNameCap = spk.charAt(0).toUpperCase() + spk.slice(1);
-                    const partLabel = `Parte ${idx + 1} (${spkNameCap})`;
-
-                    if (ansIndex !== undefined && ansIndex !== null) {
-                        if (ansIndex === correctAnswers[spk]) {
-                            // Acertou
-                            historyHtml += `
-                                <div class="w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-[10px] bg-emerald-100 text-emerald-600 cursor-help" title="${partLabel}: Acertou (Marcou Opção ${optionLetterMap[ansIndex]})">
-                                    <i class="fa-solid fa-check"></i>
-                                </div>`;
-                        } else {
-                            // Errou
-                            historyHtml += `
-                                <div class="w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-[10px] bg-red-100 text-red-600 cursor-help" title="${partLabel}: Errou (Marcou Opção ${optionLetterMap[ansIndex]})">
-                                    <i class="fa-solid fa-xmark"></i>
-                                </div>`;
-                        }
-                    } else {
-                        // Pendente
-                        historyHtml += `
-                            <div class="w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-[10px] bg-gray-100 text-gray-400 cursor-help" title="${partLabel}: Ainda não respondeu">
-                                <i class="fa-solid fa-minus"></i>
-                            </div>`;
-                    }
-                });
-                historyHtml += '</div>';
-
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-gray-100/50 transition-colors border-b border-gray-100 animate-fadeIn";
-                tr.innerHTML = `
-                    <td class="py-3 px-2 md:px-4 font-bold text-center ${badgeStyle}">${badge}</td>
-                    <td class="py-3 px-2 md:px-4 font-semibold text-gray-800">${user.name}</td>
-                    <td class="py-3 px-2 md:px-4 text-center align-middle">${historyHtml}</td>
-                    <td class="py-3 px-2 md:px-4 text-center">
-                        <span class="bg-amber-50 text-amber-800 px-3 py-1 rounded-full text-xs font-bold border border-amber-200 shadow-xs">
-                            ${user.score} / 5
-                        </span>
-                    </td>
-                `;
-                listContainer.appendChild(tr);
-            });
-        }
-
-        // Resets Administrativos (Exclusivo para Moderadores)
-        window.RESET_ALL_SCORES = async function() {
-            if (!isPresenter || !window.FB_FUNCTIONS) return;
-            
-            showCustomConfirm(
-                "Reiniciar Classificação",
-                "Tem certeza de que deseja apagar a pontuação geral e todos os históricos de respostas de todos os alunos? Esta operação não pode ser desfeita.",
-                async () => {
-                    const { collection, getDocs, updateDoc, doc } = window.FB_FUNCTIONS;
-                    try {
-                        const usersCollectionRef = collection(window.FB_DB, 'artifacts', window.FB_APP_ID, 'public', 'data', 'users');
-                        const snap = await getDocs(usersCollectionRef);
-                        const promises = [];
-                        
-                        snap.forEach((uDoc) => {
-                            promises.push(
-                                updateDoc(doc(window.FB_DB, 'artifacts', window.FB_APP_ID, 'public', 'data', 'users', uDoc.id), {
-                                    score: 0,
-                                    answers: {}
-                                })
-                            );
-                        });
-                        
-                        await Promise.all(promises);
-                        showNotification("Base limpa", "Todos os dados de progresso dos utilizadores foram reiniciados!", "success");
-                    } catch (err) {
-                        console.error(err);
-                        showNotification("Erro", "Falha ao tentar reiniciar pontuações.", "error");
-                    }
-                }
-            );
-        }
-
-        window.RESET_POLL_VOTES = async function() {
-            if (!isPresenter || !window.FB_FUNCTIONS) return;
-            
-            showCustomConfirm(
-                "Reiniciar Sondagem",
-                "Tem a certeza de que deseja zerar os resultados consolidados da enquete atual?",
-                async () => {
-                    const { doc, setDoc } = window.FB_FUNCTIONS;
-                    try {
-                        const pollDocRef = doc(window.FB_DB, 'artifacts', window.FB_APP_ID, 'public', 'data', 'poll_results', 'global');
-                        await setDoc(pollDocRef, { opt1: 0, opt2: 0, opt3: 0 });
-                        
-                        // Permitir votar novamente localmente
-                        document.getElementById('poll-options-container').classList.remove('hidden');
-                        document.getElementById('poll-voted-msg').classList.add('hidden');
-                        
-                        showNotification("Sondagem zerada", "Os resultados foram repostos a zero com sucesso!", "success");
-                    } catch (err) {
-                        console.error(err);
-                        showNotification("Erro", "Falha ao tentar reiniciar os dados da sondagem.", "error");
-                    }
-                }
-            );
-        }
     </script>
 </body>
 </html>
