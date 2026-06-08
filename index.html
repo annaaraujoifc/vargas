@@ -34,11 +34,19 @@
             background-color: #fee2e2;
             color: #991b1b;
         }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between">
+<body class="min-h-screen flex flex-col justify-between select-none">
 
-    <!-- LOGIN OVERLAY (Ecrã de Login) -->
+    <!-- LOGIN OVERLAY -->
     <div id="login-screen" class="fixed inset-0 bg-[#1e232a]/95 flex items-center justify-center z-[100] p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 md:p-8 space-y-6 shadow-2xl border-t-8 border-[#cda869]">
             <div class="text-center space-y-2">
@@ -65,8 +73,8 @@
                 </div>
 
                 <!-- Botão de login com indicador de carregamento -->
-                <button id="login-submit-btn" onclick="handleLogin()" class="w-full bg-[#1e232a] hover:bg-gray-800 text-white font-bold py-3.5 rounded-xl text-sm transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer opacity-100">
-                    <span>Entrar no Sistema</span> <i class="fa-solid fa-right-to-bracket"></i>
+                <button id="login-submit-btn" disabled onclick="handleLogin()" class="w-full bg-gray-400 text-white font-bold py-3.5 rounded-xl text-sm transition-all shadow-md flex items-center justify-center gap-2 cursor-not-allowed opacity-75">
+                    <span>A ligar ao servidor...</span> <i class="fa-solid fa-spinner animate-spin"></i>
                 </button>
                 <p id="login-error" class="text-xs text-red-600 text-center hidden font-semibold"></p>
             </div>
@@ -113,7 +121,7 @@
             <section id="tab-conteudo" class="tab-pane block space-y-6">
                 
                 <!-- Introdução -->
-                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-2">
+                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-2 animate-fadeIn">
                     <h2 class="vintage-title text-base md:text-lg font-bold text-gray-800">Guia Sincronizado do Seminário</h2>
                     <p class="text-xs text-gray-600 leading-relaxed">
                         Selecione quem está com a palavra na frente da sala de aula para libertar o resumo estruturado e responder à pergunta interativa de cada etapa. Os seus acertos sobem instantaneamente para a classificação geral da sala!
@@ -163,8 +171,8 @@
                         <div class="bg-amber-50/50 p-4 md:p-6 rounded-xl border border-amber-200 space-y-3">
                             <span class="text-[9px] font-bold text-amber-800 uppercase tracking-widest block">Pergunta de Fixação • Vale 1 Ponto</span>
                             <h4 class="text-xs md:text-sm font-bold text-gray-800">Qual era a principal diretriz de atuação do DIP quanto à imagem pública de Vargas?</h4>
-                            <div class="space-y-2 text-xs" id="q-options-giovana"></div>
-                            <div id="explanation-giovana" class="hidden text-xs p-3 rounded-lg"></div>
+                            <div class="space-y-2 text-xs flex flex-col gap-2" id="q-options-giovana"></div>
+                            <div id="explanation-giovana" class="hidden text-xs p-3.5 rounded-lg font-semibold mt-4"></div>
                         </div>
                     </div>
 
@@ -192,8 +200,8 @@
                         <div class="bg-red-50/50 p-4 md:p-6 rounded-xl border border-red-200 space-y-3">
                             <span class="text-[9px] font-bold text-red-800 uppercase tracking-widest block">Pergunta de Fixação • Vale 1 Ponto</span>
                             <h4 class="text-xs md:text-sm font-bold text-gray-800">Como se dava o controlo diário exercido pela censura do DIP?</h4>
-                            <div class="space-y-2 text-xs" id="q-options-anna"></div>
-                            <div id="explanation-anna" class="hidden text-xs p-3 rounded-lg"></div>
+                            <div class="space-y-2 text-xs flex flex-col gap-2" id="q-options-anna"></div>
+                            <div id="explanation-anna" class="hidden text-xs p-3.5 rounded-lg font-semibold mt-4"></div>
                         </div>
                     </div>
 
@@ -213,8 +221,8 @@
                         <div class="bg-blue-50/50 p-4 md:p-6 rounded-xl border border-blue-200 space-y-3">
                             <span class="text-[9px] font-bold text-blue-800 uppercase tracking-widest block">Pergunta de Fixação • Vale 1 Ponto</span>
                             <h4 class="text-xs md:text-sm font-bold text-gray-800">Por que o rádio se tornou a ferramenta de comunicação preferida do Estado Novo?</h4>
-                            <div class="space-y-2 text-xs" id="q-options-thayna"></div>
-                            <div id="explanation-thayna" class="hidden text-xs p-3 rounded-lg"></div>
+                            <div class="space-y-2 text-xs flex flex-col gap-2" id="q-options-thayna"></div>
+                            <div id="explanation-thayna" class="hidden text-xs p-3.5 rounded-lg font-semibold mt-4"></div>
                         </div>
                     </div>
 
@@ -234,8 +242,8 @@
                         <div class="bg-emerald-50/50 p-4 md:p-6 rounded-xl border border-emerald-200 space-y-3">
                             <span class="text-[9px] font-bold text-emerald-800 uppercase tracking-widest block">Pergunta de Fixação • Vale 1 Ponto</span>
                             <h4 class="text-xs md:text-sm font-bold text-gray-800">De que modo o DIP interveio na produção das letras de samba?</h4>
-                            <div class="space-y-2 text-xs" id="q-options-amanda"></div>
-                            <div id="explanation-amanda" class="hidden text-xs p-3 rounded-lg"></div>
+                            <div class="space-y-2 text-xs flex flex-col gap-2" id="q-options-amanda"></div>
+                            <div id="explanation-amanda" class="hidden text-xs p-3.5 rounded-lg font-semibold mt-4"></div>
                         </div>
                     </div>
 
@@ -255,8 +263,8 @@
                         <div class="bg-purple-50/50 p-4 md:p-6 rounded-xl border border-purple-200 space-y-3">
                             <span class="text-[9px] font-bold text-purple-800 uppercase tracking-widest block">Pergunta de Fixação • Vale 1 Ponto</span>
                             <h4 class="text-xs md:text-sm font-bold text-gray-800">Qual foi a consequência direta do falso Plano Cohen divulgado em 1937?</h4>
-                            <div class="space-y-2 text-xs" id="q-options-luiza"></div>
-                            <div id="explanation-luiza" class="hidden text-xs p-3 rounded-lg"></div>
+                            <div class="space-y-2 text-xs flex flex-col gap-2" id="q-options-luiza"></div>
+                            <div id="explanation-luiza" class="hidden text-xs p-3.5 rounded-lg font-semibold mt-4"></div>
                         </div>
                     </div>
 
@@ -267,14 +275,14 @@
             <!-- TAB 2: SONDAGEM EM TEMPO REAL (ENQUETE) -->
             <section id="tab-enquete" class="tab-pane hidden space-y-6">
                 
-                <div class="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm space-y-4">
+                <div class="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm space-y-4 animate-fadeIn">
                     <div class="space-y-1">
                         <span class="text-[10px] font-bold text-purple-600 uppercase tracking-wider block">Estudo Democrático Conduzido por Luiza</span>
                         <h3 class="vintage-title text-lg md:text-xl font-bold text-gray-800">Como avalia a maior ameaça das Fake News à democracia digital atual?</h3>
                         <p class="text-xs text-gray-500 leading-relaxed">Vote na alternativa abaixo de forma anónima. Os resultados da turma serão consolidados ao vivo no painel e projetados para debates.</p>
                     </div>
 
-                    <div class="space-y-3 text-xs md:text-sm" id="poll-options-container">
+                    <div class="space-y-3 text-xs md:text-sm flex flex-col" id="poll-options-container">
                         <button onclick="window.VOTE_POLL(1)" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl hover:border-purple-400 text-left transition-all font-semibold text-gray-700 flex justify-between items-center group focus:outline-none">
                             <span>A) O uso de robôs em redes sociais que criam pânico e manipulam votações.</span>
                             <span class="text-gray-400 group-hover:text-purple-600 transition-all"><i class="fa-solid fa-chevron-right"></i></span>
@@ -290,7 +298,7 @@
                     </div>
 
                     <!-- Mensagem pós voto -->
-                    <div id="poll-voted-msg" class="hidden text-center p-4 bg-emerald-50 text-emerald-800 rounded-xl border border-emerald-100 text-xs font-semibold">
+                    <div id="poll-voted-msg" class="hidden text-center p-4 bg-emerald-50 text-emerald-800 rounded-xl border border-emerald-100 text-xs font-semibold animate-fadeIn">
                         <i class="fa-solid fa-check-double mr-1"></i> O seu voto foi recolhido e enviado para o painel da sala!
                     </div>
                 </div>
@@ -349,30 +357,38 @@
             </section>
 
             <!-- TAB 3: CLASSIFICAÇÃO EM TEMPO REAL (RANKING) -->
-            <section id="tab-ranking" class="tab-pane hidden space-y-6 animate-fadeIn">
+            <section id="tab-ranking" class="tab-pane hidden space-y-6">
                 
-                <div class="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm space-y-4 text-center">
-                    <div class="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center mx-auto text-3xl">
+                <div class="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm space-y-4 text-center animate-fadeIn">
+                    <div class="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner">
                         🏆
                     </div>
                     <div class="space-y-1">
                         <h3 class="vintage-title text-lg md:text-xl font-bold text-gray-800">Classificação da Sala de Aula</h3>
-                        <p class="text-xs text-gray-500">Os acertos dos utilizadores são atualizados à medida que respondem.</p>
+                        <p class="text-xs text-gray-500">Histórico de respostas completas, visível em tempo real para todos na sala.</p>
+                    </div>
+
+                    <!-- Legendas do Ranking -->
+                    <div class="flex flex-wrap justify-center gap-3 text-[10px] text-gray-500 mt-4 font-semibold bg-gray-50 p-3 rounded-xl border border-gray-100 inline-flex mx-auto">
+                        <span class="flex items-center gap-1.5"><span class="w-4 h-4 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center"><i class="fa-solid fa-check text-[9px]"></i></span> Respondeu e Acertou</span>
+                        <span class="flex items-center gap-1.5"><span class="w-4 h-4 rounded-full bg-red-100 text-red-600 flex items-center justify-center"><i class="fa-solid fa-xmark text-[9px]"></i></span> Respondeu e Errou</span>
+                        <span class="flex items-center gap-1.5"><span class="w-4 h-4 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center"><i class="fa-solid fa-minus text-[9px]"></i></span> Não Respondeu</span>
                     </div>
 
                     <!-- Tabela de Alunos e Acertos -->
                     <div class="overflow-x-auto border border-gray-100 rounded-xl mt-4">
                         <table class="w-full text-left border-collapse text-xs md:text-sm">
                             <thead>
-                                <tr class="bg-gray-50 text-gray-500 uppercase tracking-wider border-b border-gray-100">
-                                    <th class="py-3 px-6 font-bold text-center w-20">Posição</th>
-                                    <th class="py-3 px-6 font-bold">Nome do Utilizador</th>
-                                    <th class="py-3 px-6 font-bold text-center w-40">Respostas Corretas</th>
+                                <tr class="bg-gray-50 text-gray-500 uppercase tracking-wider border-b border-gray-100 text-[10px] md:text-xs">
+                                    <th class="py-3.5 px-3 md:px-4 font-bold text-center w-12 md:w-16">#</th>
+                                    <th class="py-3.5 px-3 md:px-4 font-bold">Aluno(a) / Utilizador(a)</th>
+                                    <th class="py-3.5 px-3 md:px-4 font-bold text-center w-32 md:w-56">Histórico (Partes 1 a 5)</th>
+                                    <th class="py-3.5 px-3 md:px-4 font-bold text-center w-16 md:w-24">Pontos</th>
                                 </tr>
                             </thead>
                             <tbody id="ranking-list" class="divide-y divide-gray-100 text-gray-700 font-medium font-sans">
                                 <tr>
-                                    <td colspan="3" class="py-8 text-center text-gray-400">Nenhum utilizador ligado no momento.</td>
+                                    <td colspan="4" class="py-8 text-center text-gray-400">Nenhum utilizador ligado no momento.</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -381,10 +397,10 @@
 
             </section>
 
-            <!-- TAB 4: PAINEL DE CONTROLO DE APRESENTAÇÃO -->
-            <section id="tab-controle" class="tab-pane hidden space-y-6 animate-fadeIn">
+            <!-- TAB 4: PAINEL DE CONTROLO DE APRESENTAÇÃO (Acesso Administrativo Restrito) -->
+            <section id="tab-controle" class="tab-pane hidden space-y-6">
                 
-                <div class="bg-white p-6 rounded-2xl border-2 border-red-200 shadow-sm space-y-4">
+                <div class="bg-white p-6 rounded-2xl border-2 border-red-200 shadow-sm space-y-4 animate-fadeIn">
                     <div class="flex justify-between items-center">
                         <h3 class="vintage-title text-base font-bold text-red-700"><i class="fa-solid fa-gears"></i> Controlo do Seminário</h3>
                         <span class="bg-red-100 text-red-800 text-[9px] font-bold px-2 py-0.5 rounded uppercase">Moderador</span>
@@ -395,10 +411,10 @@
                     </p>
 
                     <div class="flex flex-wrap gap-2">
-                        <button onclick="window.RESET_ALL_SCORES()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2.5 rounded-lg transition-all flex items-center gap-1">
-                            <i class="fa-solid fa-trash-can"></i> Reiniciar Pontuação Geral
+                        <button onclick="window.RESET_ALL_SCORES()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer">
+                            <i class="fa-solid fa-trash-can"></i> Reiniciar Pontuações & Históricos
                         </button>
-                        <button onclick="window.RESET_POLL_VOTES()" class="bg-gray-800 hover:bg-gray-900 text-white text-xs font-bold px-4 py-2.5 rounded-lg transition-all flex items-center gap-1">
+                        <button onclick="window.RESET_POLL_VOTES()" class="bg-gray-800 hover:bg-gray-900 text-white text-xs font-bold px-4 py-2.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer">
                             <i class="fa-solid fa-square-minus"></i> Reiniciar Votos da Sondagem
                         </button>
                     </div>
@@ -428,12 +444,15 @@
             luiza: 1
         };
 
+        const speakersOrder = ['giovana', 'anna', 'thayna', 'amanda', 'luiza'];
+        const optionLetterMap = ['A', 'B', 'C'];
+
         const explanationTexts = {
-            giovana: "Correto! O papel principal do DIP era construir uma imagem idealizada e cívica de Vargas como o benfeitor das classes vulneráveis.",
-            anna: "Correto! A censura prévia bloqueava qualquer peça de teatro, partitura musical ou manchete antes de serem expostas à sociedade.",
-            thayna: "Correto! Num país com grande extensão territorial e analfabetismo expressivo, o rádio rompeu as barreiras físicas e intelectuais.",
-            amanda: "Correto! O DIP atuou diretamente forçando sambistas a remodelarem letras boémias em benefício de discursos sobre trabalho honrado.",
-            luiza: "Correto! O Plano Cohen mobilizou o temor popular de uma revolução civil comunista, facilitando juridicamente a eclosão do Estado Novo."
+            giovana: "O papel principal do DIP era construir uma imagem idealizada e cívica de Vargas como o benfeitor das classes vulneráveis.",
+            anna: "A censura prévia bloqueava qualquer peça de teatro, partitura musical ou manchete antes de serem expostas à sociedade.",
+            thayna: "Num país com grande extensão territorial e analfabetismo expressivo, o rádio rompeu as barreiras físicas e intelectuais.",
+            amanda: "O DIP atuou diretamente forçando sambistas a remodelarem letras boémias em benefício de discursos sobre trabalho honrado.",
+            luiza: "O Plano Cohen mobilizou o temor popular de uma revolução civil comunista, facilitando juridicamente a eclosão do Estado Novo."
         };
 
         const questionsData = {
@@ -498,7 +517,7 @@
             // Feedback visual de carregamento no botão
             const originalHTML = loginBtn.innerHTML;
             loginBtn.disabled = true;
-            loginBtn.innerHTML = `<span>A ligar de forma segura...</span> <i class="fa-solid fa-spinner animate-spin"></i>`;
+            loginBtn.innerHTML = `<span>A verificar sessão...</span> <i class="fa-solid fa-spinner animate-spin"></i>`;
 
             // Esperar até que a variável global window.CURRENT_FB_USER esteja preenchida (Máximo 6 segundos)
             let checkCount = 0;
@@ -517,20 +536,40 @@
                 if (ctrlBtn) ctrlBtn.classList.remove('hidden');
             }
 
-            // Gravar perfil no Firestore após autenticação segura confirmada
+            // Gravar ou recuperar perfil no Firestore após autenticação segura confirmada
             try {
                 if (window.CURRENT_FB_USER && window.FB_FUNCTIONS && window.FB_DB) {
-                    const { doc, setDoc } = window.FB_FUNCTIONS;
+                    const { doc, setDoc, getDoc } = window.FB_FUNCTIONS;
                     const userDocRef = doc(window.FB_DB, 'artifacts', window.FB_APP_ID, 'public', 'data', 'users', window.CURRENT_FB_USER.uid);
+                    
+                    // Verificar se o utilizador já possui histórico guardado de modo a não sobrepor a zeros
+                    const checkSnap = await getDoc(userDocRef);
+                    let initialScore = 0;
+                    let initialAnswers = {};
+
+                    if (checkSnap.exists()) {
+                        const data = checkSnap.data();
+                        initialScore = data.score !== undefined ? data.score : 0;
+                        initialAnswers = data.answers || {};
+                        
+                        // Atualizar localAnswers e aplicar à UI
+                        localAnswers = { ...localAnswers, ...initialAnswers };
+                    }
                     
                     await setDoc(userDocRef, {
                         name: name,
                         isPresenter: isPresenter,
-                        score: 0,
+                        score: initialScore,
+                        answers: initialAnswers,
                         uid: window.CURRENT_FB_USER.uid
                     }, { merge: true });
 
                     document.getElementById('user-display-tag').textContent = `${isPresenter ? 'Apresentador(a)' : 'Utilizador(a)'}: ${name}`;
+                    
+                    // Forçar atualização dos botões de respostas
+                    Object.keys(localAnswers).forEach(spk => {
+                        updateQuestionButtonsUI(spk);
+                    });
                 } else {
                     document.getElementById('user-display-tag').textContent = `${isPresenter ? 'Apresentador(a)' : 'Utilizador(a)'}: ${name} (Convidado)`;
                 }
@@ -561,38 +600,66 @@
 
         // Responder à pergunta da etapa ativa
         async function answerQuestion(speaker, selectedOptionIndex) {
-            if (localAnswers[speaker] !== null) return; // Bloquear nova resposta
+            if (localAnswers[speaker] !== null && localAnswers[speaker] !== undefined) return; // Bloquear nova resposta
 
             localAnswers[speaker] = selectedOptionIndex;
             const isCorrect = (selectedOptionIndex === correctAnswers[speaker]);
 
+            // Atualizar UI Localmente antes de subir
+            updateQuestionButtonsUI(speaker);
+
+            // Sincronizar o acerto no Firestore em tempo real para o Ranking Público
+            try {
+                if (window.CURRENT_FB_USER && window.FB_FUNCTIONS && window.FB_DB) {
+                    const { doc, getDoc, updateDoc } = window.FB_FUNCTIONS;
+                    const userDocRef = doc(window.FB_DB, 'artifacts', window.FB_APP_ID, 'public', 'data', 'users', window.CURRENT_FB_USER.uid);
+                    
+                    const userSnap = await getDoc(userDocRef);
+                    if (userSnap.exists()) {
+                        const userData = userSnap.data();
+                        const currentScore = userData.score || 0;
+                        const serverAnswers = userData.answers || {};
+
+                        serverAnswers[speaker] = selectedOptionIndex;
+                        const newScore = isCorrect ? currentScore + 1 : currentScore;
+
+                        await updateDoc(userDocRef, { 
+                            score: newScore,
+                            answers: serverAnswers
+                        });
+                    }
+                }
+            } catch (e) {
+                console.error("Erro ao sincronizar resposta na nuvem:", e);
+            }
+        }
+
+        // Forçar renderização de botões de acordo com respostas existentes
+        function updateQuestionButtonsUI(speaker) {
             const container = document.getElementById(`q-options-${speaker}`);
+            if (!container) return;
             const buttons = container.getElementsByTagName('button');
             const explanationEl = document.getElementById(`explanation-${speaker}`);
+            const selectedOptionIndex = localAnswers[speaker];
 
-            explanationEl.classList.remove('hidden');
-            if (isCorrect) {
-                explanationEl.className = "text-xs p-3.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold";
-                explanationEl.textContent = `✓ ${explanationTexts[speaker]}`;
-
-                // Sincronizar o acerto no Firestore em tempo real
-                try {
-                    if (window.CURRENT_FB_USER && window.FB_FUNCTIONS && window.FB_DB) {
-                        const { doc, getDoc, updateDoc } = window.FB_FUNCTIONS;
-                        const userDocRef = doc(window.FB_DB, 'artifacts', window.FB_APP_ID, 'public', 'data', 'users', window.CURRENT_FB_USER.uid);
-                        
-                        const userSnap = await getDoc(userDocRef);
-                        if (userSnap.exists()) {
-                            const currentScore = userSnap.data().score || 0;
-                            await updateDoc(userDocRef, { score: currentScore + 1 });
-                        }
-                    }
-                } catch (e) {
-                    console.error("Erro ao incrementar pontuação na nuvem:", e);
+            if (selectedOptionIndex === null || selectedOptionIndex === undefined) {
+                explanationEl.classList.add('hidden');
+                for (let i = 0; i < buttons.length; i++) {
+                    buttons[i].disabled = false;
+                    buttons[i].className = "w-full text-left p-3.5 bg-white border border-gray-200 rounded-lg hover:border-[#cda869] transition-all focus:outline-none";
                 }
+                return;
+            }
+
+            const isCorrect = (selectedOptionIndex === correctAnswers[speaker]);
+            explanationEl.classList.remove('hidden');
+            
+            if (isCorrect) {
+                explanationEl.className = "text-xs p-3.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold mt-4 animate-fadeIn";
+                explanationEl.innerHTML = `<i class="fa-solid fa-check-circle mr-1"></i> <strong>Correto!</strong> ${explanationTexts[speaker]}`;
             } else {
-                explanationEl.className = "text-xs p-3.5 rounded-lg bg-red-50 text-red-800 border border-red-200 font-semibold";
-                explanationEl.textContent = `✗ Resposta Incorreta. ${explanationTexts[speaker]}`;
+                explanationEl.className = "text-xs p-3.5 rounded-lg bg-red-50 text-red-800 border border-red-200 font-semibold mt-4 animate-fadeIn";
+                explanationEl.innerHTML = `<i class="fa-solid fa-xmark-circle mr-1"></i> <strong>Incorreto.</strong> ${explanationTexts[speaker]}`;
             }
 
             // Aplicar alteração visual nos botões
@@ -601,9 +668,9 @@
                 if (i === correctAnswers[speaker]) {
                     buttons[i].className = "w-full text-left p-3.5 bg-emerald-50 border-2 border-emerald-500 rounded-lg text-emerald-950 font-bold transition-all";
                 } else if (i === selectedOptionIndex) {
-                    buttons[i].className = "w-full text-left p-3.5 bg-red-50 border-2 border-red-500 rounded-lg text-red-950 font-bold transition-all";
+                    buttons[i].className = "w-full text-left p-3.5 bg-red-50 border-2 border-red-500 rounded-lg text-red-950 font-bold transition-all opacity-90";
                 } else {
-                    buttons[i].className = "w-full text-left p-3.5 bg-gray-50 border border-gray-100 rounded-lg text-gray-400 transition-all";
+                    buttons[i].className = "w-full text-left p-3.5 bg-gray-50 border border-gray-100 rounded-lg text-gray-400 transition-all opacity-50";
                 }
             }
         }
@@ -620,6 +687,61 @@
             if (activeBtn) {
                 activeBtn.className = "tab-btn px-4 py-2 rounded-lg text-xs md:text-sm font-bold bg-[#cda869] text-[#1e232a] transition-all shadow-sm focus:outline-none";
             }
+        }
+
+        // Modais e Toasts Utilitários (Alternativa segura contra alert/confirm)
+        function showNotification(title, message, type = 'info') {
+            const container = document.getElementById('notification-toast') || createNotificationContainer();
+            container.innerHTML = `
+                <div class="bg-white border-l-4 ${type === 'success' ? 'border-emerald-500' : type === 'error' ? 'border-red-500' : 'border-[#cda869]'} p-4 rounded-r-xl shadow-2xl flex items-start gap-3 max-w-sm w-full animate-fadeIn border-t border-b border-r border-gray-100">
+                    <span class="text-lg">${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</span>
+                    <div class="flex-grow space-y-1">
+                        <h4 class="font-bold text-xs text-gray-800 uppercase tracking-wider">${title}</h4>
+                        <p class="text-[11px] text-gray-600">${message}</p>
+                    </div>
+                </div>
+            `;
+            container.classList.remove('hidden');
+            setTimeout(() => {
+                container.classList.add('hidden');
+            }, 4000);
+        }
+
+        function createNotificationContainer() {
+            const div = document.createElement('div');
+            div.id = 'notification-toast';
+            div.className = "fixed bottom-4 right-4 z-[200] max-w-sm w-full pointer-events-auto hidden";
+            document.body.appendChild(div);
+            return div;
+        }
+
+        function showCustomConfirm(title, message, onConfirm) {
+            const overlay = document.createElement('div');
+            overlay.className = "fixed inset-0 bg-black/60 flex items-center justify-center z-[200] p-4";
+            overlay.innerHTML = `
+                <div class="bg-white rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl border-t-8 border-red-500 animate-fadeIn">
+                    <div class="text-center space-y-2">
+                        <span class="text-3xl">⚠️</span>
+                        <h3 class="vintage-title text-sm md:text-base font-bold text-gray-800 uppercase tracking-wider">${title}</h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">${message}</p>
+                    </div>
+                    <div class="flex gap-2 justify-center pt-2">
+                        <button id="modal-cancel-btn" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-xl text-xs font-bold transition-all focus:outline-none">
+                            Cancelar
+                        </button>
+                        <button id="modal-confirm-btn" class="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition-all shadow-md focus:outline-none">
+                            Confirmar
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+
+            overlay.querySelector('#modal-cancel-btn').onclick = () => { overlay.remove(); };
+            overlay.querySelector('#modal-confirm-btn').onclick = async () => {
+                overlay.remove();
+                await onConfirm();
+            };
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -659,7 +781,7 @@
                 const user = userCredential.user;
                 window.CURRENT_FB_USER = user;
 
-                // Forçar o botão de login a tornar-se ativo
+                // Ativar o botão de login após autenticação inicial concluída
                 const loginBtn = document.getElementById('login-submit-btn');
                 if (loginBtn) {
                     loginBtn.disabled = false;
@@ -667,7 +789,7 @@
                     loginBtn.innerHTML = `<span>Entrar no Sistema</span> <i class="fa-solid fa-right-to-bracket"></i>`;
                 }
 
-                // Iniciar escuta de dados
+                // Iniciar escuta síncrona
                 startRealtimeListeners(user);
             } catch (err) {
                 console.error("Erro ao autenticar com o Firebase:", err);
@@ -695,7 +817,33 @@
                 console.error("Erro na escuta da sondagem em tempo real:", err);
             });
 
-            // 2. Ouvinte da Classificação (Ranking) público para todos os participantes
+            // 2. Ouvinte de dados do próprio documento (Necessário para escutar resets do apresentador)
+            const userDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'users', user.uid);
+            onSnapshot(userDocRef, (snap) => {
+                if (snap.exists()) {
+                    const userData = snap.data();
+                    const serverAnswers = userData.answers || {};
+                    let uiChanged = false;
+
+                    Object.keys(localAnswers).forEach(key => {
+                        const targetVal = serverAnswers[key] !== undefined ? serverAnswers[key] : null;
+                        if (localAnswers[key] !== targetVal) {
+                            localAnswers[key] = targetVal;
+                            uiChanged = true;
+                        }
+                    });
+
+                    if (uiChanged) {
+                        Object.keys(localAnswers).forEach(spk => {
+                            updateQuestionButtonsUI(spk);
+                        });
+                    }
+                }
+            }, (err) => {
+                console.error("Erro na escuta do utilizador em tempo real:", err);
+            });
+
+            // 3. Ouvinte da Classificação (Ranking) público para todos os participantes com histórico detalhado
             const usersCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'users');
             onSnapshot(usersCollectionRef, (querySnap) => {
                 const userList = [];
@@ -704,13 +852,17 @@
                     if (!userData.isPresenter) {
                         userList.push({
                             name: userData.name || "Sem Nome",
-                            score: userData.score || 0
+                            score: userData.score || 0,
+                            answers: userData.answers || {}
                         });
                     }
                 });
 
-                // Ordenação em memória (Evita consultas complexas no Firestore)
-                userList.sort((a, b) => b.score - a.score);
+                // Ordenação em memória para evitar a necessidade de criar índices compostos no Firestore
+                userList.sort((a, b) => {
+                    if (b.score !== a.score) return b.score - a.score;
+                    return a.name.localeCompare(b.name);
+                });
                 window.UPDATE_RANKING_UI(userList);
             }, (err) => {
                 console.error("Erro na escuta da classificação em tempo real:", err);
@@ -740,6 +892,7 @@
                     if (optionNum === 3) opt3++;
 
                     await setDoc(pollDocRef, { opt1, opt2, opt3 }, { merge: true });
+                    showNotification("Sondagem enviada", "O seu voto foi partilhado com sucesso com a sala!", "success");
                 }
             } catch (err) {
                 console.error("Erro ao registar voto da sondagem no servidor:", err);
@@ -792,7 +945,7 @@
             }
         }
 
-        // Atualização da Classificação Dinâmica (Acesso público garantido)
+        // Atualização da Classificação Dinâmica (Detalhado com Histórico de respostas em tempo real)
         window.UPDATE_RANKING_UI = function(list) {
             const listContainer = document.getElementById('ranking-list');
             listContainer.innerHTML = '';
@@ -800,7 +953,7 @@
             if (list.length === 0) {
                 listContainer.innerHTML = `
                     <tr>
-                        <td colspan="3" class="py-8 text-center text-gray-400">Nenhum utilizador ligado no momento.</td>
+                        <td colspan="4" class="py-8 text-center text-gray-400">Nenhum utilizador ligado no momento.</td>
                     </tr>
                 `;
                 return;
@@ -813,12 +966,45 @@
                 if (index === 1) { badge = '🥈'; badgeStyle = "text-xl"; }
                 if (index === 2) { badge = '🥉'; badgeStyle = "text-xl"; }
 
+                // Construção dinâmica do histórico (Partes 1 a 5)
+                let historyHtml = '<div class="flex gap-1.5 md:gap-2 justify-center items-center">';
+                
+                speakersOrder.forEach((spk, idx) => {
+                    const ansIndex = user.answers ? user.answers[spk] : undefined;
+                    const spkNameCap = spk.charAt(0).toUpperCase() + spk.slice(1);
+                    const partLabel = `Parte ${idx + 1} (${spkNameCap})`;
+
+                    if (ansIndex !== undefined && ansIndex !== null) {
+                        if (ansIndex === correctAnswers[spk]) {
+                            // Acertou
+                            historyHtml += `
+                                <div class="w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-[10px] bg-emerald-100 text-emerald-600 cursor-help" title="${partLabel}: Acertou (Marcou Opção ${optionLetterMap[ansIndex]})">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>`;
+                        } else {
+                            // Errou
+                            historyHtml += `
+                                <div class="w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-[10px] bg-red-100 text-red-600 cursor-help" title="${partLabel}: Errou (Marcou Opção ${optionLetterMap[ansIndex]})">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </div>`;
+                        }
+                    } else {
+                        // Pendente
+                        historyHtml += `
+                            <div class="w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-[10px] bg-gray-100 text-gray-400 cursor-help" title="${partLabel}: Ainda não respondeu">
+                                <i class="fa-solid fa-minus"></i>
+                            </div>`;
+                    }
+                });
+                historyHtml += '</div>';
+
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-gray-100/50 transition-colors border-b border-gray-100";
+                tr.className = "hover:bg-gray-100/50 transition-colors border-b border-gray-100 animate-fadeIn";
                 tr.innerHTML = `
-                    <td class="py-3.5 px-6 font-bold text-center ${badgeStyle}">${badge}</td>
-                    <td class="py-3.5 px-6 font-semibold text-gray-800">${user.name}</td>
-                    <td class="py-3.5 px-6 text-center">
+                    <td class="py-3 px-2 md:px-4 font-bold text-center ${badgeStyle}">${badge}</td>
+                    <td class="py-3 px-2 md:px-4 font-semibold text-gray-800">${user.name}</td>
+                    <td class="py-3 px-2 md:px-4 text-center align-middle">${historyHtml}</td>
+                    <td class="py-3 px-2 md:px-4 text-center">
                         <span class="bg-amber-50 text-amber-800 px-3 py-1 rounded-full text-xs font-bold border border-amber-200 shadow-xs">
                             ${user.score} / 5
                         </span>
@@ -831,31 +1017,59 @@
         // Resets Administrativos (Exclusivo para Moderadores)
         window.RESET_ALL_SCORES = async function() {
             if (!isPresenter || !window.FB_FUNCTIONS) return;
-            const { collection, getDocs, updateDoc, doc } = window.FB_FUNCTIONS;
-            try {
-                const usersCollectionRef = collection(window.FB_DB, 'artifacts', window.FB_APP_ID, 'public', 'data', 'users');
-                const snap = await getDocs(usersCollectionRef);
-                snap.forEach(async (uDoc) => {
-                    await updateDoc(doc(window.FB_DB, 'artifacts', window.FB_APP_ID, 'public', 'data', 'users', uDoc.id), {
-                        score: 0
-                    });
-                });
-                alert("Todas as pontuações foram reiniciadas com sucesso!");
-            } catch (err) {
-                console.error(err);
-            }
+            
+            showCustomConfirm(
+                "Reiniciar Classificação",
+                "Tem certeza de que deseja apagar a pontuação geral e todos os históricos de respostas de todos os alunos? Esta operação não pode ser desfeita.",
+                async () => {
+                    const { collection, getDocs, updateDoc, doc } = window.FB_FUNCTIONS;
+                    try {
+                        const usersCollectionRef = collection(window.FB_DB, 'artifacts', window.FB_APP_ID, 'public', 'data', 'users');
+                        const snap = await getDocs(usersCollectionRef);
+                        const promises = [];
+                        
+                        snap.forEach((uDoc) => {
+                            promises.push(
+                                updateDoc(doc(window.FB_DB, 'artifacts', window.FB_APP_ID, 'public', 'data', 'users', uDoc.id), {
+                                    score: 0,
+                                    answers: {}
+                                })
+                            );
+                        });
+                        
+                        await Promise.all(promises);
+                        showNotification("Base limpa", "Todos os dados de progresso dos utilizadores foram reiniciados!", "success");
+                    } catch (err) {
+                        console.error(err);
+                        showNotification("Erro", "Falha ao tentar reiniciar pontuações.", "error");
+                    }
+                }
+            );
         }
 
         window.RESET_POLL_VOTES = async function() {
             if (!isPresenter || !window.FB_FUNCTIONS) return;
-            const { doc, setDoc } = window.FB_FUNCTIONS;
-            try {
-                const pollDocRef = doc(window.FB_DB, 'artifacts', window.FB_APP_ID, 'public', 'data', 'poll_results', 'global');
-                await setDoc(pollDocRef, { opt1: 0, opt2: 0, opt3: 0 });
-                alert("Os dados de votação da sondagem foram reiniciados!");
-            } catch (err) {
-                console.error(err);
-            }
+            
+            showCustomConfirm(
+                "Reiniciar Sondagem",
+                "Tem a certeza de que deseja zerar os resultados consolidados da enquete atual?",
+                async () => {
+                    const { doc, setDoc } = window.FB_FUNCTIONS;
+                    try {
+                        const pollDocRef = doc(window.FB_DB, 'artifacts', window.FB_APP_ID, 'public', 'data', 'poll_results', 'global');
+                        await setDoc(pollDocRef, { opt1: 0, opt2: 0, opt3: 0 });
+                        
+                        // Permitir votar novamente localmente
+                        document.getElementById('poll-options-container').classList.remove('hidden');
+                        document.getElementById('poll-voted-msg').classList.add('hidden');
+                        
+                        showNotification("Sondagem zerada", "Os resultados foram repostos a zero com sucesso!", "success");
+                    } catch (err) {
+                        console.error(err);
+                        showNotification("Erro", "Falha ao tentar reiniciar os dados da sondagem.", "error");
+                    }
+                }
+            );
         }
     </script>
 </body>
